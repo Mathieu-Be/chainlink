@@ -46,6 +46,7 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
   }
   mapping(uint64 => Subscription) s_subscriptions; /* subId */ /* subscription */
   mapping(uint64 => address[]) s_consumers; /* subId */ /* consumers */
+  mapping(uint64 => uint64) s_requestCount; /* subId */ /* request count */
 
   struct Request {
     uint64 subId;
@@ -159,6 +160,7 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
 
     uint256 requestId = s_nextRequestId++;
     uint256 preSeed = s_nextPreSeed++;
+    s_requestCount[_subId]++;
 
     s_requests[requestId] = Request({subId: _subId, callbackGasLimit: _callbackGasLimit, numWords: _numWords});
 
@@ -196,7 +198,12 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
     if (s_subscriptions[_subId].owner == address(0)) {
       revert InvalidSubscription();
     }
-    return (s_subscriptions[_subId].balance, 0, s_subscriptions[_subId].owner, s_consumers[_subId]);
+    return (
+      s_subscriptions[_subId].balance,
+      s_requestCount[_subId],
+      s_subscriptions[_subId].owner,
+      s_consumers[_subId]
+    );
   }
 
   function cancelSubscription(uint64 _subId, address _to) external override onlySubOwner(_subId) {
