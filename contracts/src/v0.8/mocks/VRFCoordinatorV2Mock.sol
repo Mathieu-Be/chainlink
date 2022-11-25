@@ -38,6 +38,8 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
   uint64 s_currentSubId;
   uint256 s_nextRequestId = 1;
   uint256 s_nextPreSeed = 100;
+
+  uint256 s_dummyVariable;
   struct Subscription {
     address owner;
     uint96 balance;
@@ -268,6 +270,7 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
       uint32 gasAfterPaymentCalculation
     )
   {
+    s_dummyVariable;
     return (4, 2_500_000, 2_700, 33285);
   }
 
@@ -286,6 +289,7 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
       uint24 reqsForTier5
     )
   {
+    s_dummyVariable;
     return (
       100000, // 0.1 LINK
       100000, // 0.1 LINK
@@ -300,18 +304,24 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
   }
 
   function getFallbackWeiPerUnitLink() external view returns (int256) {
+    s_dummyVariable;
     return 4000000000000000; // 0.004 Ether
   }
 
   function requestSubscriptionOwnerTransfer(uint64 _subId, address _newOwner) external pure override {
+    _subId;
+    _newOwner;
     revert("not implemented");
   }
 
   function acceptSubscriptionOwnerTransfer(uint64 _subId) external pure override {
+    _subId;
     revert("not implemented");
   }
 
-  function pendingRequestExists(uint64 subId) public view override returns (bool) {
+  function pendingRequestExists(uint64 _subId) public view override returns (bool) {
+    s_dummyVariable;
+    _subId;
     revert("not implemented");
   }
 }
